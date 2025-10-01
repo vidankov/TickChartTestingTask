@@ -13,11 +13,12 @@ public class MainWindowViewModel : ViewModelBase
     private int _maxVisibleTicks = 500;
     private string _selectedTheme = "Dark";
     private TickChart? _chart;
+    private decimal _currentPrice = 100;
 
     public MainWindowViewModel()
     {
         // Таймер для генерации данных каждые 100мс (10 тиков в секунду)
-        _timer = new Timer(100);
+        _timer = new Timer(300);
         _timer.Elapsed += (s, e) => GenerateTick();
 
         // Команда для кнопки Start/Stop
@@ -63,18 +64,30 @@ public class MainWindowViewModel : ViewModelBase
 
     private void GenerateTick()
     {
-        // Генерируем тестовые данные как на картинке из ТЗ
-        // Базовые уровни: 100, 102, 104, 106, 108, 110, 112, 114
-        var basePrice = 100 + (_random.Next(0, 8) * 2);
-
-        // Добавляем небольшую случайную вариацию (±0.5)
+        _currentPrice += _random.Next(0, 8) * 2;
         var variation = (decimal)((_random.NextDouble() - 0.5) * 1.0);
-        var price = (decimal)basePrice + variation;
+        _currentPrice += variation;
 
-        // Вызываем в UI потоке (Avalonia требует этого)
+        System.Diagnostics.Debug.WriteLine($"Generated tick: {_currentPrice}, Chart is null: {Chart == null}");
+
         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
-            Chart?.AddTick(price);
+            if (Chart != null)
+            {
+                try
+                {
+                    Chart.AddTick(_currentPrice);
+                    System.Diagnostics.Debug.WriteLine($"SUCCESS: Tick {_currentPrice} added to chart!");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"ERROR adding tick: {ex.Message}");
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("ERROR: Chart is null - cannot add tick!");
+            }
         });
     }
 }
