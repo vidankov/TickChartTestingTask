@@ -1,23 +1,64 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:UTS.AvaloniaUI.ComponentTask1.ViewModels"
-		xmlns:tc="clr-namespace:UTS.AvalonaiUI.ComponentTask1.TickChartControl;assembly=TickChartControl"
+        xmlns:tc="clr-namespace:UTS.AvalonaiUI.ComponentTask1.TickChartControl;assembly=TickChartControl"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
         x:Class="UTS.AvaloniaUI.ComponentTask1.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="UTS.AvaloniaUI.ComponentTask1">
+        Title="TickChart Demo"
+		x:DataType="vm:MainWindowViewModel">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
-	
-	<Grid>		
-        <tc:TickChart x:Name="Chart" HorizontalAlignment="Center" VerticalAlignment="Center"/>        
-    </Grid>
+	<Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
 
+	<DockPanel>
+		<!-- Панель управления - закрепляем сверху -->
+		<StackPanel DockPanel.Dock="Top"
+                    Orientation="Horizontal"
+                    Margin="15"
+                    Spacing="20">
+
+			<!-- Кнопка Start/Stop -->
+			<Button Content="{Binding ButtonText}"
+                    Command="{Binding StartStopCommand}"
+                    Width="80"
+                    Height="30"
+                    FontSize="12"/>
+
+			<!-- Настройка MaxVisibleTicks -->
+			<StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+				<TextBlock Text="Max Ticks:"
+                           VerticalAlignment="Center"
+                           FontSize="12"/>
+				<NumericUpDown Value="{Binding MaxVisibleTicks}"
+                              Minimum="100"
+                              Maximum="1000"
+                              Increment="50"
+                              Width="80"
+                              Height="28"/>
+			</StackPanel>
+
+			<!-- Выбор темы -->
+			<StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+				<TextBlock Text="Theme:"
+                           VerticalAlignment="Center"
+                           FontSize="12"/>
+				<ComboBox SelectedItem="{Binding SelectedTheme}"
+                          Width="100"
+                          Height="28">
+					<ComboBoxItem>Dark</ComboBoxItem>
+					<ComboBoxItem>Light</ComboBoxItem>
+				</ComboBox>
+			</StackPanel>
+		</StackPanel>
+
+		<!-- TickChart компонент - занимает всё оставшееся пространство -->
+		<tc:TickChart MaxVisibleTicks="{Binding MaxVisibleTicks}"
+                     ChartTheme="{Binding SelectedTheme}"
+                     x:Name="ChartControl"
+                     Margin="10"/>
+	</DockPanel>
 </Window>
