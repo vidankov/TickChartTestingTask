@@ -44,14 +44,12 @@
 			<!-- Выбор темы -->
 			<StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
 				<TextBlock Text="Theme:"
-                           VerticalAlignment="Center"
-                           FontSize="12"/>
+						   VerticalAlignment="Center"
+						   FontSize="12"/>
 				<ComboBox SelectedItem="{Binding SelectedTheme}"
-                          Width="100"
-                          Height="28">
-					<ComboBoxItem>Dark</ComboBoxItem>
-					<ComboBoxItem>Light</ComboBoxItem>
-				</ComboBox>
+						  ItemsSource="{Binding AvailableThemes}"
+						  Width="100"
+						  Height="28"/>
 			</StackPanel>
 		</StackPanel>
 

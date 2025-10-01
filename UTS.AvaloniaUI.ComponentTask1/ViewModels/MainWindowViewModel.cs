@@ -1,5 +1,6 @@
 ﻿using ReactiveUI;
 using System;
+using System.Collections.Generic;
 using System.Timers;
 using UTS.AvalonaiUI.ComponentTask1.TickChartControl;
 
@@ -14,6 +15,8 @@ public class MainWindowViewModel : ViewModelBase
     private string _selectedTheme = "Dark";
     private TickChart? _chart;
     private decimal _currentPrice = 100;
+
+    public List<string> AvailableThemes { get; } = new() { "Dark", "Light" };
 
     public MainWindowViewModel()
     {
