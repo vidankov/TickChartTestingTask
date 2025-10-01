@@ -18,16 +18,6 @@ public class MainWindowViewModel : ViewModelBase
 
     public List<string> AvailableThemes { get; } = new() { "Dark", "Light" };
 
-    public MainWindowViewModel()
-    {
-        // Таймер для генерации данных каждые 100мс (10 тиков в секунду)
-        _timer = new Timer(300);
-        _timer.Elapsed += (s, e) => GenerateTick();
-
-        // Команда для кнопки Start/Stop
-        StartStopCommand = ReactiveCommand.Create(StartStop);
-    }
-
     public ReactiveCommand<System.Reactive.Unit, System.Reactive.Unit> StartStopCommand { get; }
 
     public int MaxVisibleTicks
@@ -49,6 +39,16 @@ public class MainWindowViewModel : ViewModelBase
     }
 
     public string ButtonText => _isRunning ? "Stop" : "Start";
+
+    public MainWindowViewModel()
+    {
+        // Таймер для генерации данных каждые 100мс (10 тиков в секунду)
+        _timer = new Timer(300);
+        _timer.Elapsed += (s, e) => GenerateTick();
+
+        // Команда для кнопки Start/Stop
+        StartStopCommand = ReactiveCommand.Create(StartStop);
+    }
 
     private void StartStop()
     {
