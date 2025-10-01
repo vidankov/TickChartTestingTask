@@ -1,30 +1,32 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="using:UTS.AvalonaiUI.ComponentTask1.TickChartControl">
+        xmlns:controls="using:UTS.AvalonaiUI.ComponentTask1.TickChartControl"
+        xmlns:ava="clr-namespace:ScottPlot.Avalonia;assembly=ScottPlot.Avalonia">
 
-  <!--
-    Additional resources 
-    Using Control Themes:
-         https://docs.avaloniaui.net/docs/basics/user-interface/styling/control-themes
-    Using Theme Variants:
-         https://docs.avaloniaui.net/docs/guides/styles-and-resources/how-to-use-theme-variants
-  -->
-  
-  <Design.PreviewWith>
-    <StackPanel Width="400" Spacing="10">      
-        <StackPanel Background="{DynamicResource SystemRegionBrush}">
-          <controls:TickChart />
-        </StackPanel>
-    </StackPanel>
-  </Design.PreviewWith>
- 
-  <ControlTheme x:Key="{x:Type controls:TickChart}" TargetType="controls:TickChart">
-    <Setter Property="Template">
-      <ControlTemplate>
-        <TextBlock Text="Tick Chart Control" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-      </ControlTemplate>
-    </Setter>
-  </ControlTheme>    
+	<Design.PreviewWith>
+		<StackPanel Width="400" Height="300" Spacing="10">
+			<StackPanel Background="{DynamicResource SystemRegionBrush}">
+				<controls:TickChart />
+			</StackPanel>
+		</StackPanel>
+	</Design.PreviewWith>
+
+	<ControlTheme x:Key="{x:Type controls:TickChart}" TargetType="controls:TickChart">
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderBrush}"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Padding" Value="10"/>
+
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						Padding="{TemplateBinding Padding}">
+					<ava:AvaPlot x:Name="PART_Plot" />
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</ControlTheme>
 
 </ResourceDictionary>
-
