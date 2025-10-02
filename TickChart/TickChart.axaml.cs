@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using ScottPlot;
 using ScottPlot.Avalonia;
 using TickChartControl.Models;
 
@@ -73,8 +74,45 @@ public class TickChart : TemplatedControl
         _plot.Plot.YLabel("Price");
         _plot.Plot.XLabel("Time");
 
+        SetBottomAxesDateTimeFromat();
         ApplyTheme();
         _plot.Refresh();
+    }
+
+    private void SetBottomAxesDateTimeFromat()
+    {
+        _plot.Plot.Axes.DateTimeTicksBottom();
+        _plot.Plot.RenderManager.RenderStarting += (s, e) =>
+        {
+            if (_ticks.Any())
+            {
+                Tick[] ticks = _plot.Plot.Axes.Bottom.TickGenerator.Ticks;
+
+                string tickLabelFormat;
+
+                var timeSpan = _ticks[^1].Time - _ticks[0].Time;
+
+                if (timeSpan.TotalHours <= 1)
+                {
+                    tickLabelFormat = "HH:mm:ss";
+                }
+                else if (timeSpan.TotalDays <= 1)
+                {
+                    tickLabelFormat = "HH:mm";
+                }
+                else
+                {
+                    tickLabelFormat = "dd.MM.yy\nHH:mm";
+                }
+
+                for (int i = 0; i < ticks.Length; i++)
+                {
+                    DateTime dateTime = DateTime.FromOADate(ticks[i].Position);
+                    string label = dateTime.ToString(tickLabelFormat);
+                    ticks[i] = new Tick(ticks[i].Position, label);
+                }
+            }
+        };
     }
 
     private void ApplyTheme()
