@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Timers;
 using UTS.AvalonaiUI.ComponentTask1.TickChartControl;
+using UTS.AvaloniaUI.ComponentTask1.Utilities;
 
 namespace UTS.AvaloniaUI.ComponentTask1.ViewModels;
 
@@ -14,7 +15,14 @@ public class MainWindowViewModel : ViewModelBase
     private int _maxVisibleTicks = 500;
     private string _selectedTheme = "Dark";
     private TickChart? _chart;
+    private bool _isTestBenchEnabled;
     private decimal _currentPrice = 100;
+
+    public bool IsTestBenchEnabled
+    {
+        get => _isTestBenchEnabled;
+        set => this.RaiseAndSetIfChanged(ref _isTestBenchEnabled, value);
+    }
 
     public List<string> AvailableThemes { get; } = new() { "Dark", "Light" };
 
@@ -43,7 +51,7 @@ public class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         // Таймер для генерации данных каждые 100мс (10 тиков в секунду)
-        _timer = new Timer(50);
+        _timer = new Timer(100);
         _timer.Elapsed += (s, e) => GenerateTick();
 
         // Команда для кнопки Start/Stop
@@ -71,7 +79,13 @@ public class MainWindowViewModel : ViewModelBase
         var variation = (decimal)((_random.NextDouble() - 0.5) * 1.0);
         _currentPrice += variation;
 
-        System.Diagnostics.Debug.WriteLine($"Generated tick: {_currentPrice}, Chart is null: {Chart == null}");
+        //System.Diagnostics.Debug.WriteLine($"Generated tick: {_currentPrice}, Chart is null: {Chart == null}");
+
+        if (IsTestBenchEnabled)
+        {
+            System.Diagnostics.Debug.WriteLine($"ViewModel: Sending tick to MessageBus - {_currentPrice}");
+            PerformanceMessageBus.PublishTick(_currentPrice);
+        }
 
         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
         {
@@ -80,7 +94,7 @@ public class MainWindowViewModel : ViewModelBase
                 try
                 {
                     Chart.AddTick(_currentPrice);
-                    System.Diagnostics.Debug.WriteLine($"SUCCESS: Tick {_currentPrice} added to chart!");
+                    //System.Diagnostics.Debug.WriteLine($"SUCCESS: Tick {_currentPrice} added to chart!");
                 }
                 catch (Exception ex)
                 {
