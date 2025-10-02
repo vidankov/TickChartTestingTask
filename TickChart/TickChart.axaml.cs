@@ -84,35 +84,27 @@ public class TickChart : TemplatedControl
         _plot.Plot.Axes.DateTimeTicksBottom();
         _plot.Plot.RenderManager.RenderStarting += (s, e) =>
         {
-            if (_ticks.Any())
+            if (_ticks.Count == 0) return;
+
+            var ticks = _plot.Plot.Axes.Bottom.TickGenerator.Ticks;
+
+            string tickLabelFormat = GetTickLabelFormat();
+
+            for (int i = 0; i < ticks.Length; i++)
             {
-                Tick[] ticks = _plot.Plot.Axes.Bottom.TickGenerator.Ticks;
-
-                string tickLabelFormat;
-
-                var timeSpan = _ticks[^1].Time - _ticks[0].Time;
-
-                if (timeSpan.TotalHours <= 1)
-                {
-                    tickLabelFormat = "HH:mm:ss";
-                }
-                else if (timeSpan.TotalDays <= 1)
-                {
-                    tickLabelFormat = "HH:mm";
-                }
-                else
-                {
-                    tickLabelFormat = "dd.MM.yy\nHH:mm";
-                }
-
-                for (int i = 0; i < ticks.Length; i++)
-                {
-                    DateTime dateTime = DateTime.FromOADate(ticks[i].Position);
-                    string label = dateTime.ToString(tickLabelFormat);
-                    ticks[i] = new Tick(ticks[i].Position, label);
-                }
+                DateTime dateTime = DateTime.FromOADate(ticks[i].Position);
+                string label = dateTime.ToString(tickLabelFormat);
+                ticks[i] = new Tick(ticks[i].Position, label);
             }
         };
+    }
+    private string GetTickLabelFormat()
+    {
+        var timeSpan = _ticks[^1].Time - _ticks[0].Time;
+
+        return timeSpan.TotalHours <= 1 ? "HH:mm:ss" :
+               timeSpan.TotalDays <= 1 ? "HH:mm" :
+               "dd.MM.yy\nHH:mm";
     }
 
     private void ApplyTheme()
