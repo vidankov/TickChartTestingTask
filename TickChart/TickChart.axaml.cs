@@ -11,6 +11,7 @@ public class TickChart : TemplatedControl
 {
     private readonly List<TickData> _ticks = new();
     private AvaPlot? _plot;
+    private DateTime _lastRenderTime = DateTime.Now;
 
     public static readonly StyledProperty<int> MaxVisibleTicksProperty =
         AvaloniaProperty.Register<TickChart, int>(
@@ -142,6 +143,9 @@ public class TickChart : TemplatedControl
     {
         if (_plot?.Plot == null || _ticks.Count == 0) return;
 
+        if ((DateTime.Now - _lastRenderTime).TotalMilliseconds < 33)
+            return;
+
         _plot.Plot.Clear();
 
         double[] times = new double[_ticks.Count];
@@ -163,5 +167,6 @@ public class TickChart : TemplatedControl
 
         _plot.Plot.Axes.AutoScale();
         _plot.Refresh();
+        _lastRenderTime = DateTime.Now;
     }
 }

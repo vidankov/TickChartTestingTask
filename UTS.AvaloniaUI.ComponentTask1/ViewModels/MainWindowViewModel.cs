@@ -51,7 +51,7 @@ public class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         // Таймер для генерации данных каждые 100мс (10 тиков в секунду)
-        _timer = new Timer(100);
+        _timer = new Timer(10);
         _timer.Elapsed += (s, e) => GenerateTick();
 
         // Команда для кнопки Start/Stop
