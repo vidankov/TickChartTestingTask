@@ -9,7 +9,7 @@ namespace UTS.AvalonaiUI.ComponentTask1.TickChartControl;
 
 public class TickChart : TemplatedControl
 {
-    private readonly List<TickData> _ticks = new();
+    private CircularTickBuffer _ticks;
     private AvaPlot? _plot;
     private DateTime _lastRenderTime = DateTime.Now;
 
@@ -36,6 +36,7 @@ public class TickChart : TemplatedControl
     public TickChart()
     {
         this.TemplateApplied += OnTemplateApplied;
+        _ticks = new CircularTickBuffer(MaxVisibleTicks);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -49,14 +50,10 @@ public class TickChart : TemplatedControl
         }
         else if (change.Property == MaxVisibleTicksProperty)
         {
-            while (_ticks.Count > MaxVisibleTicks)
-            {
-                _ticks.RemoveAt(0);
-            }
+            _ticks = _ticks.Resize(MaxVisibleTicks);
             UpdatePlot();
         }
     }
-
     private void OnTemplateApplied(object? sender, TemplateAppliedEventArgs e)
     {
         _plot = e.NameScope.Find<AvaPlot>("PART_Plot");
@@ -66,7 +63,6 @@ public class TickChart : TemplatedControl
             InitializePlot();
         }
     }
-
     private void InitializePlot()
     {
         if (_plot?.Plot == null) return;
@@ -79,7 +75,6 @@ public class TickChart : TemplatedControl
         ApplyTheme();
         _plot.Refresh();
     }
-
     private void SetBottomAxesDateTimeFromat()
     {
         _plot.Plot.Axes.DateTimeTicksBottom();
@@ -101,13 +96,20 @@ public class TickChart : TemplatedControl
     }
     private string GetTickLabelFormat()
     {
-        var timeSpan = _ticks[^1].Time - _ticks[0].Time;
+        var head = _ticks.Head;
+        var tail = _ticks.Tail;
+
+        if (head == null || tail == null)
+        {
+            return "HH:mm:ss";
+        }
+
+        TimeSpan timeSpan = tail.Time - head.Time;
 
         return timeSpan.TotalHours <= 1 ? "HH:mm:ss" :
                timeSpan.TotalDays <= 1 ? "HH:mm" :
                "dd.MM.yy\nHH:mm";
     }
-
     private void ApplyTheme()
     {
         if (_plot?.Plot == null) return;
@@ -125,20 +127,12 @@ public class TickChart : TemplatedControl
             _plot.Plot.Axes.Color(ScottPlot.Color.FromHex("#000000"));
         }
     }
-
     public void AddTick(decimal price)
     {
         var tick = new TickData(DateTime.Now, price);
         _ticks.Add(tick);
-
-        while (_ticks.Count > MaxVisibleTicks)
-        {
-            _ticks.RemoveAt(0);
-        }
-
         UpdatePlot();
     }
-
     private void UpdatePlot()
     {
         if (_plot?.Plot == null || _ticks.Count == 0) return;
@@ -146,24 +140,16 @@ public class TickChart : TemplatedControl
         if ((DateTime.Now - _lastRenderTime).TotalMilliseconds < 33)
             return;
 
+        var (times, prices, _) = _ticks.GetPlotData();
+
         _plot.Plot.Clear();
 
-        double[] times = new double[_ticks.Count];
-        double[] prices = new double[_ticks.Count];
-
-        for (int i = 0; i < _ticks.Count; i++)
-        {
-            var tick = _ticks[i];
-            times[i] = tick.Time.ToOADate();
-            prices[i] = (double)tick.Price;
-        }
-
-        var scatter = _plot.Plot.Add.Scatter(times, prices);
-        scatter.Color = ChartTheme == "Dark"
+        var signalXY = _plot.Plot.Add.SignalXY(times, prices);
+        signalXY.Color = ChartTheme == "Dark"
             ? ScottPlot.Color.FromHex("#00FF00")
             : ScottPlot.Color.FromHex("#007ACC");
-        scatter.LineWidth = 2;
-        scatter.MarkerSize = 0;
+        signalXY.LineWidth = 2;
+        signalXY.MarkerSize = 0;
 
         _plot.Plot.Axes.AutoScale();
         _plot.Refresh();
