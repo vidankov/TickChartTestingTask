@@ -140,18 +140,21 @@ public class TickChart : TemplatedControl
         if ((DateTime.Now - _lastRenderTime).TotalMilliseconds < 33)
             return;
 
-        var (times, prices, _) = _ticks.GetPlotData();
+        lock (_plot.Plot.Sync)
+        {
+            var (times, prices, _) = _ticks.GetPlotData();
 
-        _plot.Plot.Clear();
+            _plot.Plot.Clear();
 
-        var signalXY = _plot.Plot.Add.SignalXY(times, prices);
-        signalXY.Color = ChartTheme == "Dark"
-            ? ScottPlot.Color.FromHex("#00FF00")
-            : ScottPlot.Color.FromHex("#007ACC");
-        signalXY.LineWidth = 2;
-        signalXY.MarkerSize = 0;
-
-        _plot.Plot.Axes.AutoScale();
+            var signalXY = _plot.Plot.Add.SignalXY(times, prices);
+            signalXY.Color = ChartTheme == "Dark"
+                ? ScottPlot.Color.FromHex("#00FF00")
+                : ScottPlot.Color.FromHex("#007ACC");
+            signalXY.LineWidth = 2;
+            signalXY.MarkerSize = 0;
+            _plot.Plot.Axes.AutoScale();
+        }
+        
         _plot.Refresh();
         _lastRenderTime = DateTime.Now;
     }
