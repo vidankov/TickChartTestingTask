@@ -1,7 +1,7 @@
 ﻿using ReactiveUI;
 using System;
 using System.Collections.Generic;
-using System.Timers;
+using System.Threading;
 using UTS.AvalonaiUI.ComponentTask1.TickChartControl;
 using UTS.AvaloniaUI.ComponentTask1.Utilities;
 
@@ -9,7 +9,7 @@ namespace UTS.AvaloniaUI.ComponentTask1.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
-    private readonly Timer _timer;
+    private readonly System.Threading.Timer _timer;
     private readonly Random _random = new();
     private bool _isRunning;
     private int _maxVisibleTicks = 500;
@@ -51,8 +51,7 @@ public class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         // Таймер для генерации данных каждые 100мс (10 тиков в секунду)
-        _timer = new Timer(10);
-        _timer.Elapsed += (s, e) => GenerateTick();
+        _timer = new System.Threading.Timer(_ => GenerateTick(), null, Timeout.Infinite, 10);
 
         // Команда для кнопки Start/Stop
         StartStopCommand = ReactiveCommand.Create(StartStop);
@@ -62,11 +61,11 @@ public class MainWindowViewModel : ViewModelBase
     {
         if (_isRunning)
         {
-            _timer.Stop();
+            _timer.Change(Timeout.Infinite, 10);
         }
         else
         {
-            _timer.Start();
+            _timer.Change(0, 10);
         }
 
         _isRunning = !_isRunning;
