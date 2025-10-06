@@ -30,13 +30,21 @@ public class MainWindowViewModel : ViewModelBase
     public int MaxVisibleTicks
     {
         get => _maxVisibleTicks;
-        set => this.RaiseAndSetIfChanged(ref _maxVisibleTicks, value);
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _maxVisibleTicks, value);
+            _tickChart.MaxVisibleTicks = value;
+        }
     }
 
     public string SelectedTheme
     {
         get => _selectedTheme;
-        set => this.RaiseAndSetIfChanged(ref _selectedTheme, value);
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedTheme, value);
+            _tickChart.ChartTheme = value;
+        }
     }
 
     public string ButtonText => _isRunning ? "Stop" : "Start";
@@ -44,6 +52,9 @@ public class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel(IPriceGenerator priceGenerator, ITickChart tickChart)
     {
         _tickChart = tickChart;
+        _tickChart.ChartTheme = SelectedTheme;
+        _tickChart.MaxVisibleTicks = MaxVisibleTicks;
+
         _priceGenerator = priceGenerator;
         _priceGenerator.Reset();
 
