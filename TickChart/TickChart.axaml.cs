@@ -3,13 +3,14 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using ScottPlot;
 using ScottPlot.Avalonia;
+using TickChartControl.Abstractions;
 using TickChartControl.Models;
 
 namespace UTS.AvalonaiUI.ComponentTask1.TickChartControl;
 
-public class TickChart : TemplatedControl
+public class TickChart : TemplatedControl, ITickChart
 {
-    private CircularTickBuffer _ticks;
+    private ITickStorage _ticks;
     private AvaPlot? _plot;
     private DateTime _lastRenderTime = DateTime.Now;
 
@@ -33,10 +34,10 @@ public class TickChart : TemplatedControl
         set => SetValue(ChartThemeProperty, value);
     }
 
-    public TickChart()
+    public TickChart(ITickStorage ticksStorage)
     {
         this.TemplateApplied += OnTemplateApplied;
-        _ticks = new CircularTickBuffer(MaxVisibleTicks);
+        _ticks = ticksStorage;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

@@ -1,4 +1,6 @@
-﻿namespace TickChartControl.Models;
+﻿using TickChartControl.Abstractions;
+
+namespace TickChartControl.Models;
 
 /// <summary>
 /// Циклический буфер для хранения тиковых данных для графика ScottPlot.
@@ -6,7 +8,7 @@
 /// - Добавление тика: O(1), данные не упорядочиваются;
 /// - Получение данных из метода GetPlotData: O(n), данные упорядочиваются;
 /// </summary>
-public class CircularTickBuffer
+public class CircularTickBuffer : ITickStorage
 {
     private readonly TickData[] _buffer;
     private readonly double[] _timesForPlot;
@@ -155,7 +157,7 @@ public class CircularTickBuffer
     /// </summary>
     /// <param name="newCapacity">Новая вместимость</param>
     /// <returns>Новый буфер с измененным размером</returns>
-    public CircularTickBuffer Resize(int newCapacity)
+    public ITickStorage Resize(int newCapacity)
     {
         if (newCapacity <= 0)
             throw new ArgumentException("New capacity must be greater than 0", nameof(newCapacity));
