@@ -97,9 +97,6 @@
         </StackPanel>
 
         <!-- TickChart компонент - занимает всё оставшееся пространство -->
-        <tc:TickChart MaxVisibleTicks="{Binding MaxVisibleTicks}"
-                     ChartTheme="{Binding SelectedTheme}"
-                     x:Name="ChartControl"
-                     Margin="10"/>
+		<ContentControl Content="{Binding TickChartControl}" Margin="10"/>
     </DockPanel>
 </Window>

@@ -4,6 +4,7 @@ using System;
 using UTS.AvalonaiUI.ComponentTask1.TickChartControl;
 using UTS.AvaloniaUI.ComponentTask1.Behaviors;
 using UTS.AvaloniaUI.ComponentTask1.Utilities;
+using UTS.AvaloniaUI.ComponentTask1.ViewModels;
 
 namespace UTS.AvaloniaUI.ComponentTask1.Views;
 
@@ -12,8 +13,9 @@ public partial class MainWindow : Window
     private DateTime _lastSecondTime = DateTime.Now;
     private int _ticksThisSecond;
 
-    public MainWindow()
+    public MainWindow(MainWindowViewModel viewModel)
     {
+        DataContext = viewModel;
         InitializeComponent();
 
         PerformanceMessageBus.SubscribeToTicks(OnTickGenerated);
@@ -24,26 +26,7 @@ public partial class MainWindow : Window
 
     private void OnWindowLoaded(object? sender, EventArgs e)
     {
-        LinkChart(sender, e);
         NumericUpDownDiagnostic();
-    }
-    private void LinkChart(object? sender, EventArgs e)
-    {
-        var chartControl = this.FindControl<TickChart>("ChartControl");
-        if (chartControl == null)
-        {
-            System.Diagnostics.Debug.WriteLine("ERROR: ChartControl not found!");
-            return;
-        }
-        if (DataContext is ViewModels.MainWindowViewModel viewModel)
-        {
-            viewModel.Chart = chartControl;
-            System.Diagnostics.Debug.WriteLine("SUCCESS: Chart linked to ViewModel!");
-        }
-        else
-        {
-            System.Diagnostics.Debug.WriteLine($"ERROR: DataContext is {DataContext?.GetType().Name ?? "null"}");
-        }
     }
     private void NumericUpDownDiagnostic()
     {
