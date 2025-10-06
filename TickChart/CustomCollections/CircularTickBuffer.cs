@@ -1,6 +1,4 @@
-﻿using TickChartControl.Abstractions;
-
-namespace TickChartControl.Models;
+﻿namespace TickChartControl.Models;
 
 /// <summary>
 /// Циклический буфер для хранения тиковых данных для графика ScottPlot.

@@ -1,7 +1,4 @@
-using System;
-using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using UTS.AvaloniaUI.ComponentTask1.ViewModels;
 
 namespace UTS.AvaloniaUI.ComponentTask1
 {

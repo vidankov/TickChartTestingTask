@@ -1,18 +1,7 @@
-using Avalonia;
-using Avalonia.Controls;
-using System;
-using UTS.AvalonaiUI.ComponentTask1.TickChartControl;
-using UTS.AvaloniaUI.ComponentTask1.Behaviors;
-using UTS.AvaloniaUI.ComponentTask1.Utilities;
-using UTS.AvaloniaUI.ComponentTask1.ViewModels;
-
 namespace UTS.AvaloniaUI.ComponentTask1.Views;
 
 public partial class MainWindow : Window
 {
-    private DateTime _lastSecondTime = DateTime.Now;
-    private int _ticksThisSecond;
-
     public MainWindow(MainWindowViewModel viewModel)
     {
         DataContext = viewModel;

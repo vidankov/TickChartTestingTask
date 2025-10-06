@@ -1,6 +1,4 @@
-﻿using TickChartControl.Models;
-
-namespace TickChartControl.Abstractions
+﻿namespace TickChartControl.Abstractions
 {
     public interface ITickStorage
     {

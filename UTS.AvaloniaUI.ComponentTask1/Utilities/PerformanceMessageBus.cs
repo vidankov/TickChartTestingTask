@@ -1,5 +1,4 @@
 ﻿using Avalonia.Threading;
-using System;
 
 namespace UTS.AvaloniaUI.ComponentTask1.Utilities;
 

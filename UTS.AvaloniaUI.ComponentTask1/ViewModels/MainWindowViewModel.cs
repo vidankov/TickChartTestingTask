@@ -1,11 +1,5 @@
-﻿using ReactiveUI;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
-using TickChartControl.Abstractions;
-using TickChartControl.Services.MarketData;
-using UTS.AvalonaiUI.ComponentTask1.TickChartControl;
-using UTS.AvaloniaUI.ComponentTask1.Utilities;
 
 namespace UTS.AvaloniaUI.ComponentTask1.ViewModels;
 

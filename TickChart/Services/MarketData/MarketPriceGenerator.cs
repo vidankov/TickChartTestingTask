@@ -1,6 +1,4 @@
-﻿using TickChartControl.Abstractions;
-
-namespace TickChartControl.Services.MarketData
+﻿namespace TickChartControl.Services.MarketData
 {
     public class MarketPriceGenerator : IPriceGenerator
     {

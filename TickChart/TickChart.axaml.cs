@@ -3,8 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using ScottPlot;
 using ScottPlot.Avalonia;
-using TickChartControl.Abstractions;
-using TickChartControl.Models;
 
 namespace UTS.AvalonaiUI.ComponentTask1.TickChartControl;
 

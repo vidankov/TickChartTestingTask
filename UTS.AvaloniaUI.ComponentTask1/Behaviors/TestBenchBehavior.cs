@@ -1,7 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Data;
-using System;
+﻿using Avalonia.Data;
 using System.Diagnostics;
 using System.Reactive.Linq;
 

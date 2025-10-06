@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace UTS.AvaloniaUI.ComponentTask1.Utilities;
+﻿namespace UTS.AvaloniaUI.ComponentTask1.Utilities;
 
 /// <summary>
 /// Сообщение о сгенерированном тике для тестового бенчмарка

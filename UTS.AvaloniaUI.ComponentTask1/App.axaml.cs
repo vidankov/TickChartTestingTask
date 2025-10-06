@@ -1,13 +1,9 @@
-using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using TickChartControl.Abstractions;
 using TickChartControl.Models;
 using TickChartControl.Services.MarketData;
 using UTS.AvalonaiUI.ComponentTask1.TickChartControl;
-using UTS.AvaloniaUI.ComponentTask1.ViewModels;
 using UTS.AvaloniaUI.ComponentTask1.Views;
 
 namespace UTS.AvaloniaUI.ComponentTask1

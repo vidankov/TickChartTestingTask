@@ -1,6 +1,4 @@
-﻿using System;
-using Avalonia;
-using Avalonia.ReactiveUI;
+﻿using Avalonia.ReactiveUI;
 
 namespace UTS.AvaloniaUI.ComponentTask1
 {
