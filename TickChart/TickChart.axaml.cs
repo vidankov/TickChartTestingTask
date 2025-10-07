@@ -117,12 +117,14 @@ public class TickChart : TemplatedControl, ITickChart
         {
             _plot.Plot.FigureBackground.Color = ScottPlot.Color.FromHex("#1E1E1E");
             _plot.Plot.DataBackground.Color = ScottPlot.Color.FromHex("#2D2D30");
+            _plot.Plot.Grid.LineColor = ScottPlot.Color.FromHex("#595959");
             _plot.Plot.Axes.Color(ScottPlot.Color.FromHex("#FFFFFF"));
         }
         else
         {
             _plot.Plot.FigureBackground.Color = ScottPlot.Color.FromHex("#FFFFFF");
             _plot.Plot.DataBackground.Color = ScottPlot.Color.FromHex("#F8F8F8");
+            _plot.Plot.Grid.LineColor = ScottPlot.Color.FromHex("#d6d6d6");
             _plot.Plot.Axes.Color(ScottPlot.Color.FromHex("#000000"));
         }
     }
