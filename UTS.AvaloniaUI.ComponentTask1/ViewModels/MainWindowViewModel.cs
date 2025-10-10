@@ -1,58 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using ReactiveUI.SourceGenerators;
 
 namespace UTS.AvaloniaUI.ComponentTask1.ViewModels;
 
-public class MainWindowViewModel : ViewModelBase
+public partial class MainWindowViewModel : ReactiveObject
 {
     private readonly System.Threading.Timer _timer;
-    private readonly Random _random = new();
     private bool _isRunning;
-    private int _maxVisibleTicks = 500;
-    private string _selectedTheme = "Dark";
-    private readonly IPriceGenerator _priceGenerator;
-    private readonly ITickChart _tickChart;
-    private bool _isTestBenchEnabled;
     private decimal _currentPrice = 100;
 
-    public bool IsTestBenchEnabled
-    {
-        get => _isTestBenchEnabled;
-        set => this.RaiseAndSetIfChanged(ref _isTestBenchEnabled, value);
-    }
+    private readonly IPriceGenerator _priceGenerator;
+    private readonly ITickChart _tickChart;
+    
+    [Reactive] private string _selectedTheme = "Dark";
+    [Reactive] private int _maxVisibleTicks = 500;
+    [Reactive] private bool _isTestBenchEnabled;
+    [Reactive] private string _buttonText = "Start";
 
     public List<string> AvailableThemes { get; } = new() { "Dark", "Light" };
-
-    public ReactiveCommand<System.Reactive.Unit, System.Reactive.Unit> StartStopCommand { get; }
-
     public ITickChart TickChartControl => _tickChart;
-
-    public int MaxVisibleTicks
-    {
-        get => _maxVisibleTicks;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _maxVisibleTicks, value);
-            _tickChart.MaxVisibleTicks = value;
-        }
-    }
-
-    public string SelectedTheme
-    {
-        get => _selectedTheme;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _selectedTheme, value);
-            _tickChart.ChartTheme = value;
-        }
-    }
-
-    public string ButtonText => _isRunning ? "Stop" : "Start";
 
     public MainWindowViewModel(IPriceGenerator priceGenerator, ITickChart tickChart)
     {
         _tickChart = tickChart;
-        _tickChart.ChartTheme = SelectedTheme;
         _tickChart.MaxVisibleTicks = MaxVisibleTicks;
 
         _priceGenerator = priceGenerator;
@@ -61,10 +32,14 @@ public class MainWindowViewModel : ViewModelBase
         // Таймер для генерации данных каждые 100мс (10 тиков в секунду)
         _timer = new System.Threading.Timer(_ => GenerateTick(), null, Timeout.Infinite, 10);
 
-        // Команда для кнопки Start/Stop
-        StartStopCommand = ReactiveCommand.Create(StartStop);
+        this.WhenAnyValue(viewModel => viewModel.MaxVisibleTicks)
+            .BindTo(_tickChart, model => model.MaxVisibleTicks);
+
+        this.WhenAnyValue(viewModel => viewModel.SelectedTheme)
+            .BindTo(_tickChart, model => model.ChartTheme);
     }
 
+    [ReactiveCommand]
     private void StartStop()
     {
         if (_isRunning)
@@ -77,7 +52,7 @@ public class MainWindowViewModel : ViewModelBase
         }
 
         _isRunning = !_isRunning;
-        this.RaisePropertyChanged(nameof(ButtonText));
+        ButtonText = _isRunning ? "Stop" : "Start";
     }
 
     private void GenerateTick()
