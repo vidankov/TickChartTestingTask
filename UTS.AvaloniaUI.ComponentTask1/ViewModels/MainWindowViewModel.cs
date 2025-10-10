@@ -6,7 +6,7 @@ namespace UTS.AvaloniaUI.ComponentTask1.ViewModels;
 
 public partial class MainWindowViewModel : ReactiveObject
 {
-    private readonly System.Threading.Timer _timer;
+    private readonly Timer _timer;
     private bool _isRunning;
     private decimal _currentPrice = 100;
 
