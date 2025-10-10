@@ -25,6 +25,11 @@
     </PackageReference>
     <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.6" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
+    <PackageReference Include="ReactiveUI" Version="20.1.1" />
+    <PackageReference Include="ReactiveUI.SourceGenerators" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="ScottPlot.Avalonia" Version="5.0.56" />
     <PackageReference Include="xunit" Version="2.9.3" />
   </ItemGroup>
